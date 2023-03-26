@@ -10,10 +10,10 @@ This application talks to redis and Axon servers. To spin up instances of these 
     - If you're on Windows, you may then need to [manually update WSL to version 2](https://docs.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package)
 - Then, pull and run both the [official redis Docker image](https://hub.docker.com/_/redis) and the [official axon Docker image](https://hub.docker.com/r/axoniq/axonserver) by opening a terminal and running:
     - `docker pull redis`
-    - `docker pull axoniq/axonserver`
+    - `docker pull axoniq/axonserver:latest-jdk-11-dev-nonroot`
 - Finally, run the images via the following commands:
     - `docker run --name eriegz-redis -p 6379:6379 -d redis`
-    - `docker run -d --platform linux/amd64 --name eriegz-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver`
+    - `docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver:latest-jdk-11-dev-nonroot`
 
 ### **How to run:**
 
