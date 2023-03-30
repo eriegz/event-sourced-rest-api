@@ -40,7 +40,7 @@ class UserManagementController(
         )
         println("Result of creating new user ${createUserReqBody.username}: ${result.get()}")
         return mapOf(
-            "result" to "Called create user with username ${createUserReqBody.username}"
+            "userId" to result.get()
         )
     }
 

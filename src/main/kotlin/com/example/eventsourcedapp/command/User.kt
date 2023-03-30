@@ -51,7 +51,7 @@ data class User(
     }
 
     @CommandHandler
-    fun handle(command: UpdateUserCommand) {
+    constructor(command: UpdateUserCommand) : this() {
         println("Handling UpdateUserCommand")
         // TODO: Validate input here
         AggregateLifecycle.apply(
@@ -80,6 +80,7 @@ data class User(
     @EventSourcingHandler
     fun on(event: UserUpdatedEvent) {
         println("Sourcing UserUpdatedEvent...")
+        println("userId: ${userId}")
         username = event.username
         password = event.password
     }
