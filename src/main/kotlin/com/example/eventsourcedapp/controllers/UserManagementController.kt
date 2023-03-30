@@ -61,7 +61,7 @@ class UserManagementController(
         val result: CompletableFuture<Any> = commandGateway.send(
             UpdateUserCommand(userId, updateUserReqBody.username, updateUserReqBody.password)
         )
-        println("Result of deleting user ${userId}: ${result.get()}")
+        println("Result of updating user ${userId}: ${result.get()}")
         return mapOf(
             "result" to "Called update user for username $userId"
         )
