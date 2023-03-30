@@ -2,15 +2,17 @@ package com.example.eventsourcedapp.query
 
 import com.example.eventsourcedapp.coreapi.RetrieveUserQuery
 import com.example.eventsourcedapp.coreapi.UserCreatedEvent
+import com.example.eventsourcedapp.coreapi.UserDeletedEvent
+import com.example.eventsourcedapp.coreapi.UserUpdatedEvent
 
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 class UserProjector {
-
     private final var repository: UserViewRepository
 
     constructor(repository: UserViewRepository) {
@@ -19,12 +21,35 @@ class UserProjector {
 
     @EventHandler
     fun on(event: UserCreatedEvent) {
-        val userView = UserView(event.username, event.password)
+        val userView = UserView(event.userId.toString(), event.username, event.password)
+        println("Saving user projection to database: ${userView}")
         repository.save(userView)
     }
 
     @QueryHandler
     fun handle(query: RetrieveUserQuery): UserView {
-        return repository.findById(query.username).orElse(null)
+        var result = repository.findById(query.userId.toString()).orElse(null)
+        println("DB query result: ${result}")
+        return result
+    }
+
+    @EventHandler
+    fun on(event: UserUpdatedEvent) {
+        val userView = repository.findById(event.userId.toString())
+        if (userView.isPresent) {
+            repository.save(
+                UserView(event.userId.toString(), event.username, event.password)
+            )
+        }
+    }
+
+    @EventHandler
+    fun on(event: UserDeletedEvent) {
+        println("Trying to delete user ${event.userId}")
+        val userView = repository.findById(event.userId.toString())
+        if (userView.isPresent) {
+            println("Found user ${event.userId} in database...")
+        }
+        repository.deleteById(event.userId.toString())
     }
 }

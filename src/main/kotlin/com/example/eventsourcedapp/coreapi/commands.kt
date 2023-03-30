@@ -10,11 +10,12 @@ data class CreateUserCommand(
 
 data class UpdateUserCommand(
     @TargetAggregateIdentifier
+    val userId: UUID,
     val username: String,
     val password: String
 )
 
 data class DeleteUserCommand(
     @TargetAggregateIdentifier
-    val username: String
+    val userId: UUID
 )

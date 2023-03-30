@@ -1,3 +1,5 @@
 package com.example.eventsourcedapp.coreapi
 
-data class RetrieveUserQuery(val username: String)
+import java.util.UUID
+
+data class RetrieveUserQuery(val userId: UUID)
