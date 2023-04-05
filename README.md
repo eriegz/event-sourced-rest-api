@@ -64,5 +64,5 @@ curl --location --request PUT 'localhost:3000/api/user/80fcdd4a-aa74-45d3-baff-a
 **Delete** user:
 
 ```
-curl --location --request DELETE 'localhost:3000/api/user/bac999ce-3638-4859-9993-e18681638989'
+curl --location --request DELETE 'localhost:3000/api/user/80fcdd4a-aa74-45d3-baff-a4281c1aae26'
 ```
