@@ -12,7 +12,7 @@ This application talks to redis and Axon servers. To spin up instances of these 
     - `docker pull redis`
     - `docker pull axoniq/axonserver:latest-jdk-11-dev-nonroot`
 - Finally, run the images via the following commands:
-    - `docker run --name eriegz-redis -p 6379:6379 -d redis`
+    - `docker run --name my-redis -p 6379:6379 -d redis`
     - `docker run -d --name my-axon-server -p 8024:8024 -p 8124:8124 axoniq/axonserver:latest-jdk-11-dev-nonroot`
 
 ### **How to run:**
@@ -30,6 +30,7 @@ mvn spring-boot:run
 To try out the REST API, you can copy-paste any of the following cURL request examples into your terminal, or into an application such as [Postman](https://www.postman.com/).
 
 ### User CRUD endpoints:
+
 ________________
 
 **Create** user:
@@ -38,29 +39,30 @@ ________________
 curl --location --request POST 'localhost:3000/api/user/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "username": "YOUR_USERNAME_HERE",
-    "password": "YOUR_PASSWORD_HERE"
+    "username": "myuser",
+    "password": "P@ssword123!"
 }'
 ```
 
 **Read** user:
 
 ```
-curl --location --request GET 'localhost:3000/api/user/YOUR_USERNAME_HERE'
+curl --location --request GET 'localhost:3000/api/user/80fcdd4a-aa74-45d3-baff-a4281c1aae26'
 ```
 
 **Update** user:
 
 ```
-curl --location --request PUT 'localhost:3000/api/user/YOUR_USERNAME_HERE' \
+curl --location --request PUT 'localhost:3000/api/user/80fcdd4a-aa74-45d3-baff-a4281c1aae26' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "password": "YOUR_PASSWORD_HERE"
+    "username": "myuser2",
+    "password": "PaaaaaaaSWORD!123"
 }'
 ```
 
 **Delete** user:
 
 ```
-curl --location --request DELETE 'localhost:3000/api/user/YOUR_USERNAME_HERE'
+curl --location --request DELETE 'localhost:3000/api/user/bac999ce-3638-4859-9993-e18681638989'
 ```
