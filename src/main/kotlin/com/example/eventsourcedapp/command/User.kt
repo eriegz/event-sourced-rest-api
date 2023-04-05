@@ -6,8 +6,7 @@ import com.example.eventsourcedapp.coreapi.UpdateUserCommand
 import com.example.eventsourcedapp.coreapi.UserCreatedEvent
 import com.example.eventsourcedapp.coreapi.UserDeletedEvent
 import com.example.eventsourcedapp.coreapi.UserUpdatedEvent
-import com.example.eventsourcedapp.coreapi.UsernameNotFound
-import com.example.eventsourcedapp.coreapi.UsernameTakenException
+import com.example.eventsourcedapp.coreapi.UsernameAlreadyTakenException
 import com.example.eventsourcedapp.services.UserService
 
 import org.axonframework.commandhandling.CommandHandler
@@ -34,9 +33,8 @@ data class User(
         command.username,
         command.password
     ) {
-        if (userService.usernameExists(command.username)) {
-            // TODO: Ensure this message gets back to the client:
-            throw UsernameTakenException("This username is already taken")
+        if (userService.usernameAlreadyTaken(command.username)) {
+            throw UsernameAlreadyTakenException()
         }
         AggregateLifecycle.apply(
             UserCreatedEvent(
@@ -50,9 +48,8 @@ data class User(
 
     @CommandHandler
     fun handle(command: UpdateUserCommand, userService: UserService) {
-        if (!userService.usernameExists(command.username)) {
-            // TODO: Ensure this message gets back to the client:
-            throw UsernameNotFound("Username not found")
+        if (userService.usernameAlreadyTaken(command.username)) {
+            throw UsernameAlreadyTakenException()
         }
         AggregateLifecycle.apply(
             UserUpdatedEvent(
@@ -72,7 +69,7 @@ data class User(
 
     @EventSourcingHandler
     fun on(event: UserCreatedEvent) {
-        println("Sourcing UserCreatedEvent...")
+        println("Sourcing UserCreatedEvent for user ${event.userId}")
         userId = event.userId
         username = event.username
         password = event.password
@@ -80,14 +77,14 @@ data class User(
 
     @EventSourcingHandler
     fun on(event: UserUpdatedEvent) {
-        println("Sourcing UserUpdatedEvent...")
+        println("Sourcing UserUpdatedEvent for user ${event.userId}")
         username = event.username
         password = event.password
     }
 
     @EventSourcingHandler
     fun on(event: UserDeletedEvent) {
-        println("Deleting user aggregate...")
+        println("Sourcing UserDeletedEvent for user ${event.userId}")
         AggregateLifecycle.markDeleted()
     }
 }

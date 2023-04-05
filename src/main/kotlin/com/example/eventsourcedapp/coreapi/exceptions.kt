@@ -1,5 +1,15 @@
 package com.example.eventsourcedapp.coreapi
 
-class UsernameTakenException(message: String) : Exception(message)
+import org.axonframework.commandhandling.CommandExecutionException
+import org.springframework.http.HttpStatus
 
-class UsernameNotFound(message: String) : Exception(message)
+data class RestExceptionDetails(
+    val message: String,
+    val httpCode: HttpStatus
+)
+
+class UsernameAlreadyTakenException() : CommandExecutionException(
+    null,
+    null,
+    RestExceptionDetails("This username is already taken", HttpStatus.BAD_REQUEST)
+)

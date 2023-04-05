@@ -12,6 +12,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
 @RestController
@@ -31,17 +32,15 @@ class UserManagementController(
     val queryGateway: QueryGateway
 ) {
     @PostMapping("register")
-    fun createUser(@RequestBody createUserReqBody: CreateUserRequest): Map<String, Any> {
-        val result: CompletableFuture<Any> = commandGateway.send(
+    fun createUser(
+        @RequestBody createUserReqBody: CreateUserRequest
+    ): CompletableFuture<ResponseEntity<Map<String, String>>> {
+        return commandGateway.send<UUID>(
             CreateUserCommand(
                 createUserReqBody.username,
                 createUserReqBody.password
             )
-        )
-        println("Result of creating new user ${createUserReqBody.username}: ${result.get()}")
-        return mapOf(
-            "userId" to result.get()
-        )
+        ).thenApply { ResponseEntity.ok(mapOf("userId" to it.toString())) }
     }
 
     @GetMapping("{userId}")
@@ -52,22 +51,16 @@ class UserManagementController(
         )
     }
 
-    // TODO: Fix this endpoint (getting "No qualifying bean of type 'CreateUserCommand`" error)
     @PutMapping("{userId}")
     fun updateUser(
         @PathVariable userId: UUID,
         @RequestBody updateUserReqBody: UpdateUserRequest
-    ): Map<String, Any> {
-        val result: CompletableFuture<Any> = commandGateway.send(
+    ): CompletableFuture<ResponseEntity<Any>> {
+        return commandGateway.send<Any>(
             UpdateUserCommand(userId, updateUserReqBody.username, updateUserReqBody.password)
-        )
-        println("Result of updating user ${userId}: ${result.get()}")
-        return mapOf(
-            "result" to "Called update user for username $userId"
-        )
+        ).thenApply { ResponseEntity.noContent().build() }
     }
 
-    // TODO: Fix this endpoint (getting "No qualifying bean of type 'CreateUserCommand`" error)
     @DeleteMapping("{userId}")
     fun deleteUser(@PathVariable userId: UUID): Map<String, Any> {
         val result: CompletableFuture<Any> = commandGateway.send(DeleteUserCommand(userId))

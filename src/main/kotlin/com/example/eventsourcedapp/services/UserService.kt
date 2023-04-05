@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(val repository: UserViewRepository) {
-    fun usernameExists(username: String): Boolean {
+    fun usernameAlreadyTaken(username: String): Boolean {
         return repository.findByUsername(username) != null
     }
 }
