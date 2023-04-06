@@ -29,11 +29,11 @@ import java.util.concurrent.CompletableFuture
 @RequestMapping("api/user")
 class UserManagementController(
     val commandGateway: CommandGateway,
-    val queryGateway: QueryGateway
+    val queryGateway: QueryGateway,
 ) {
     @PostMapping("register")
     fun createUser(
-        @RequestBody createUserReqBody: CreateUserRequest
+        @RequestBody createUserReqBody: CreateUserRequest,
     ): CompletableFuture<ResponseEntity<Map<String, String>>> {
         return commandGateway.send<UUID>(
             CreateUserCommand(
@@ -54,7 +54,7 @@ class UserManagementController(
     @PutMapping("{userId}")
     fun updateUser(
         @PathVariable userId: UUID,
-        @RequestBody updateUserReqBody: UpdateUserRequest
+        @RequestBody updateUserReqBody: UpdateUserRequest,
     ): CompletableFuture<ResponseEntity<Any>> {
         return commandGateway.send<Any>(
             UpdateUserCommand(userId, updateUserReqBody.username, updateUserReqBody.password)

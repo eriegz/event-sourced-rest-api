@@ -3,6 +3,7 @@ package com.example.eventsourcedapp.query
 import com.example.eventsourcedapp.coreapi.RetrieveUserQuery
 import com.example.eventsourcedapp.coreapi.UserCreatedEvent
 import com.example.eventsourcedapp.coreapi.UserDeletedEvent
+import com.example.eventsourcedapp.coreapi.UserNotFound
 import com.example.eventsourcedapp.coreapi.UserUpdatedEvent
 
 import org.axonframework.eventhandling.EventHandler
@@ -29,6 +30,9 @@ class UserProjector {
     @QueryHandler
     fun handle(query: RetrieveUserQuery): UserView {
         var result = repository.findById(query.userId.toString()).orElse(null)
+        if (result == null) {
+            throw UserNotFound()
+        }
         println("DB query result: ${result}")
         return result
     }

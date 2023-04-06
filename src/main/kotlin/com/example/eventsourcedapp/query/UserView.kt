@@ -15,7 +15,7 @@ data class UserView(
     //  query them back out again as strings.
     @Id val userId: String?,
     val username: String?,
-    val password: String?
+    val password: String?,
 ) {
     constructor() : this(null, null, null)
 }

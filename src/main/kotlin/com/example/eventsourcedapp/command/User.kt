@@ -23,7 +23,7 @@ data class User(
     var userId: UUID? = null,
     var username: String? = null,
     var password: String? = null,
-    var userService: UserService? = null
+    var userService: UserService? = null,
 ) {
     constructor() : this(null, null, null, null)
 

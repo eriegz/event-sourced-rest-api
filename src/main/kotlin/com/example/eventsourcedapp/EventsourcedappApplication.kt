@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class EventsourcedappApplication
 
 fun main(args: Array<String>) {
-	runApplication<EventsourcedappApplication>(*args)
+    runApplication<EventsourcedappApplication>(*args)
 }
